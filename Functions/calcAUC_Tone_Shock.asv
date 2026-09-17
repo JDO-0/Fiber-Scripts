@@ -1,0 +1,43 @@
+function [astro_AUC_Tone, neuron_AUC_Tone, astro_AUC_Shock, neuron_AUC_Shock] = calcAUC_Tone_Shock(astro_z, neuron_z, trial_type, sampling_rate)
+
+if trial_type == "Cond"
+    Start_Tone_Baseline = 1;
+    End_Tone_Baseline = round(10 * sampling_rate);
+    Start_Tone_AUC = End_Tone_Baseline + 1;
+    End_Tone_AUC = round(20 * sampling_rate);
+    Start_Shock_Baseline = round(31 * sampling_rate);
+    End_Shock_Baseline = round(39 * sampling_rate);
+    Start_Shock_AUC = End_Shock_Baseline + 1;
+    End_Shock_AUC = round(58 * sampling_rate);
+    
+    % Calculate AUC and divide by sampling rate to get time-based integration
+    astro_tone_base = trapz(astro_z(Start_Tone_Baseline:End_Tone_Baseline)) / sampling_rate;
+    astro_tone = trapz(astro_z(Start_Tone_AUC:End_Tone_AUC)) / sampling_rate;
+    neuron_tone_base = trapz(neuron_z(Start_Tone_Baseline:End_Tone_Baseline)) / sampling_rate;
+    neuron_tone = trapz(neuron_z(Start_Tone_AUC:End_Tone_AUC)) / sampling_rate;
+    
+    astro_shock_base = trapz(astro_z(Start_Shock_Baseline:End_Shock_Baseline)) / sampling_rate;
+    astro_shock = trapz(astro_z(Start_Shock_AUC:End_Shock_AUC)) / sampling_rate;
+    neuron_shock_base = trapz(neuron_z(Start_Shock_Baseline:End_Shock_Baseline)) / sampling_rate;
+    neuron_shock = trapz(neuron_z(Start_Shock_AUC:End_Shock_AUC)) / sampling_rate;
+    
+    astro_AUC_Tone = astro_tone - astro_tone_base;
+    neuron_AUC_Tone = neuron_tone - neuron_tone_base;
+    astro_AUC_Shock = astro_shock - astro_shock_base;
+    neuron_AUC_Shock = neuron_shock - neuron_shock_base;
+else
+    astro_AUC_Shock = NaN;
+    neuron_AUC_Shock = NaN;
+    Start_Tone_Baseline = 1;
+    End_Tone_Baseline = round(20 * sampling_rate);
+    Start_Tone_AUC = End_Tone_Baseline + 1;
+    End_Tone_AUC = round(40 * sampling_rate);
+    
+    astro_tone_base = trapz(astro_z(Start_Tone_Baseline:End_Tone_Baseline)) / sampling_rate;
+    astro_tone = trapz(astro_z(Start_Tone_AUC:End_Tone_AUC)) / sampling_rate;
+    neuron_tone_base = trapz(neuron_z(Start_Tone_Baseline:End_Tone_Baseline)) / sampling_rate;
+    neuron_tone = trapz(neuron_z(Start_Tone_AUC:End_Tone_AUC)) / sampling_rate;
+    
+    astro_AUC_Tone = astro_tone - astro_tone_base;
+    neuron_AUC_Tone = neuron_tone - neuron_tone_base;
+end
